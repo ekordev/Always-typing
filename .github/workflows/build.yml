@@ -20,23 +20,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 18
-
-      - name: Install Pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+          bun-version: latest
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install
 
       - name: Build Plugin
-        # This runs the build script defined in your package.json
-        # It typically targets the 'js' folder automatically
-        run: pnpm build
+        # This executes "bun run scripts/build.ts" as defined in your package.json
+        run: bun run build
 
       - name: Commit & Push Build
         uses: stefanzweifel/git-auto-commit-action@v4
