@@ -33,10 +33,17 @@ jobs:
         run: bun run build
         working-directory: js
 
+      # DEBUG: This will show us if the file actually exists
+      - name: List Files (Debug)
+        run: |
+          echo "Listing js/dist folder:"
+          ls -R js/dist || echo "js/dist folder NOT FOUND"
+
       - name: Commit & Push Build
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "chore: update build [skip ci]"
           branch: dist
           create_branch: true
-          file_pattern: js/dist/*
+          # Changed to '.' to force it to pick up ANY file change
+          file_pattern: .
