@@ -1,0 +1,47 @@
+name: Build Plugin
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths-ignore:
+      - 'dist/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Plugin
+        # This runs the build script defined in your package.json
+        # It typically targets the 'js' folder automatically
+        run: pnpm build
+
+      - name: Commit & Push Build
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: update build [skip ci]"
+          branch: dist
+          create_branch: true
+          file_pattern: dist/*
